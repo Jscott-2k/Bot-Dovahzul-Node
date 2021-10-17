@@ -1,8 +1,8 @@
-//require('dotenv').config();
+require('dotenv').config();
 
 const axios = require('axios');
 const { Client, Intents }  = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 const prefix = "!";
 const translatorURL = "https://api.funtranslations.com/translate/thuum.json";
 
@@ -13,14 +13,14 @@ const replyTranslated = (msg,res)=>{
     msg.reply(data.contents.translated);
 }
 
-const handleCommand = (msg, cmd, args) => {
+const handleCommand = async (msg, cmd, args) => {
     console.log("Processing Command: " + cmd);
     if (cmd === 'test'){
         msg.reply("Never Should've Come Here!");
     }else if(cmd==='dova'){
         console.log("Translating: " + args.join(" "));
         
-        axios.post(translatorURL,
+        await axios.post(translatorURL,
         {
             "text":args.join(" "),
             "translation": "thuum"
@@ -34,15 +34,15 @@ const handleCommand = (msg, cmd, args) => {
         });
 
     }else{
-        msg.reply("Command '" + cmd + "' unknown");
+        await msg.reply("Command '" + cmd + "' unknown");
     }
 }
 
-client.on('messageCreate', (msg)=>{
+client.on('messageCreate', async (msg)=>{
     if(msg.author.bot) return; 
     if(msg.content.startsWith(prefix)){
         const [cmd, ...args] = msg.content.trim().substring(prefix.length).split(/\s+/);
-        handleCommand(msg, cmd, args);
+        await handleCommand(msg, cmd, args);
     }
 });
 client.login(process.env.DISCORD_BOT_TOKEN);
