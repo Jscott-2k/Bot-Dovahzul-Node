@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 
 const axios = require('axios');
 const { Client, Intents }  = require('discord.js');
@@ -45,5 +45,5 @@ client.on('messageCreate', (msg)=>{
         handleCommand(msg, cmd, args);
     }
 });
-
+console.log(process.env.DISCORD_BOT_TOKEN);
 client.login(process.env.DISCORD_BOT_TOKEN);
